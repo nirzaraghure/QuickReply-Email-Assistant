@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Reply Assistant</title>
+    <!-- Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Font: Inter for a modern look -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            width: 400px; /* Increased width to accommodate wider textarea */
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fc; /* Very light background */
+            padding: 20px; /* Reduced overall padding for less height */
+            box-sizing: border-box;
+            color: #212121; /* Default text color changed to near-black */
+            max-height: 400px; /* Set a max height for the popup */
+            overflow-y: auto; /* Enable scrolling if content exceeds max height */
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 25px; /* Adjusted spacing between main sections */
+            background-color: #ffffff;
+            padding: 30px; /* Adjusted padding inside the box for less height */
+            border-radius: 20px; /* Consistent rounded corners */
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1); /* Deeper, softer shadow */
+            border: 1px solid #dae1e7; /* Subtle border */
+        }
+        h1 {
+            font-size: 1.8rem; /* Slightly reduced font size */
+            font-weight: 700; /* Bold heading */
+            text-align: center;
+            color: #1a1a1a; /* Darker heading, closer to black */
+            margin-bottom: 20px; /* Adjusted space below heading */
+        }
+        h2 {
+            font-size: 1.1rem; /* Slightly reduced font size */
+            font-weight: 600;
+            color: #333333; /* Darker subheading */
+            margin-bottom: 10px; /* Adjusted space below subheading */
+        }
+        label {
+            color: #333333; /* Darker label color */
+            font-weight: 500;
+            margin-bottom: 5px; /* Adjusted spacing for labels */
+            display: block; /* Ensures label takes full width for space-y to work */
+        }
+        textarea, input[type="text"], input[type="password"] {
+            width: 90%; /* Ensure textarea takes full available width */
+            border-width: 1px;
+            border-color: #aebfd1; /* Softer border color */
+            border-radius: 12px; /* More rounded input fields */
+            padding: 12px 16px; /* Adjusted padding inside inputs */
+            background-color: #fcfdfe; /* Slightly brighter input background */
+            color: #333333; /* Darker text color inside inputs */
+            font-size: 0.95rem; /* Slightly reduced font size */
+            transition: all 0.2s ease-in-out;
+            box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.1); /* Inner shadow for depth */
+        }
+        textarea:focus, input[type="text"]:focus, input[type="password"]:focus {
+            outline: none;
+            border-color: #4c82f7; /* Brighter blue focus */
+            box-shadow: 0 0 0 5px rgba(76, 130, 247, 0.35), inset 0 1px 5px rgba(0, 0, 0, 0.1); /* Blue glow on focus */
+            background-color: #ffffff;
+        }
+        textarea {
+            min-height: 120px; /* Reduced minimum height for reply textarea */
+            max-height: 250px; /* Added max height to prevent it from getting too tall */
+            resize: vertical;
+            line-height: 1.7; /* Better line spacing for readability */
+        }
+
+        /* Professional Button Styles */
+        button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px; /* Adjusted space between icon and text */
+            padding: 12px 20px; /* Reduced padding for smaller buttons */
+            font-size: 1rem; /* Slightly reduced font size */
+            font-weight: 600;
+            margin: 8px;
+            border-radius: 12px; /* Consistent roundedness */
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            background-image: linear-gradient(to bottom right, var(--tw-gradient-from), var(--tw-gradient-to)); /* Gradient background */
+            color: white;
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.12); /* Adjusted button shadow */
+        }
+        button:hover {
+            transform: translateY(-2px); /* Adjusted lift on hover */
+            box-shadow: 0 7px 18px rgba(0, 0, 0, 0.18);
+        }
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+        }
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Specific Button Colors */
+        .btn-primary {
+            --tw-gradient-from: #4c82f7; /* Brighter blue */
+            --tw-gradient-to: #2a65d7; /* Darker blue */
+        }
+        .btn-secondary {
+            --tw-gradient-from: #a78bfa; /* Soft purple */
+            --tw-gradient-to: #8b5cf6; /* Deeper purple */
+        }
+        .btn-success {
+            --tw-gradient-from: #34d399; /* Vibrant green */
+            --tw-gradient-to: #10b981; /* Darker green */
+        }
+        .btn-clear {
+            --tw-gradient-from: #fcd34d; /* Warm yellow/orange */
+            --tw-gradient-to: #fbbf24; /* Deeper yellow/orange */
+            color: #333333; /* Darker text for clear button */
+        }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            border: 6px solid rgba(0, 0, 0, 0.1); /* Slightly smaller border */
+            border-top: 6px solid #4c82f7; /* Primary blue color */
+            border-radius: 50%;
+            width: 36px; /* Slightly smaller spinner */
+            height: 36px;
+            animation: spin 1s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
+            margin: 20px auto; /* Adjusted margin */
+            display: none;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Message Box */
+        .message-box {
+            padding: 12px; /* Slightly reduced padding */
+            border-radius: 10px; /* Adjusted border radius */
+            margin-top: 18px; /* Adjusted space above message box */
+            font-size: 0.9rem; /* Slightly reduced font size */
+            text-align: center;
+            font-weight: 500;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            transform: translateY(10px); /* Adjusted slide effect */
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); /* Adjusted shadow */
+        }
+        .message-box.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .message-box-success {
+            background-color: #dcfce7; /* Lighter green */
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+        .message-box-error {
+            background-color: #fee2e2; /* Lighter red */
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+        .message-box-info {
+            background-color: #dbeafe; /* Lighter blue */
+            color: #1e40af;
+            border: 1px solid #bfdbfe;
+        }
+
+        /* Error Container */
+        #errorContainer {
+            padding: 16px; /* Adjusted padding for error */
+            background-color: #fee2e2; /* Light red */
+            border: 1px solid #ef4444; /* Stronger red border */
+            color: #b91c1c; /* Darker red text */
+            border-radius: 10px; /* Adjusted border radius */
+            font-weight: 500;
+            text-align: center;
+        }
+    </style>
+    <!-- Phosphor Icons for better visual appeal -->
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/dist/phosphor.js"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="container">
+        <h1>QuickReply Email Assistant</h1>
+
+        <!-- Content Generation Section -->
+        <button id="extractAndGenerateBtn" class="w-full btn-primary">
+            <i class="ph-bold ph-sparkle text-lg"></i>
+            Get Reply Suggestion
+        </button>
+
+        <div id="loadingSpinner" class="loading-spinner"></div>
+
+        <div id="responseContainer" class="hidden space-y-4">
+            <h2>Suggested Reply:</h2>
+            <textarea id="replySuggestion" class="w-full"
+                      placeholder="Your reply suggestion will appear here..." readonly></textarea>
+            <div class="flex flex-col sm:flex-row gap-4">
+                <button id="copyReplyBtn" class="flex-1 btn-success">
+                    <i class="ph-bold ph-copy text-lg"></i>
+                    Copy Reply
+                </button>
+                <button id="clearReplyBtn" class="flex-1 btn-clear">
+                    <i class="ph-bold ph-x-circle text-lg"></i>
+                    Clear Reply
+                </button>
+            </div>
+            <div id="messageBox" class="message-box hidden"></div>
+        </div>
+
+        <div id="errorContainer" class="hidden">
+            <p id="errorMessage"></p>
+        </div>
+
+        <!-- API Key Input Section (Moved to bottom) -->
+        <div class="space-y-4">
+            <label for="apiKeyInput" class="block text-base font-medium">Gemini API Key:</label>
+            <input type="password" id="apiKeyInput"
+                   class="w-full"
+                   placeholder="Enter your Gemini API Key (e.g., AIza...)">
+            <button id="saveApiKeyBtn" class="w-full btn-secondary">
+                <i class="ph-bold ph-key text-lg"></i>
+                Save API Key
+            </button>
+            <div id="apiKeyStatus" class="text-sm text-center font-medium text-gray-700"></div>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>
