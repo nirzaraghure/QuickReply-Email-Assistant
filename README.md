@@ -14,7 +14,7 @@ Introducing QuickReply - Email Assistant, a Chrome extension powered by Gemini A
 ✅ Designed for students, professionals, HRs, support teams, and more
 
 📸 Demo Preview :
-![Demo](./Screenshot (957).png)
+![Demo](./Screenshot (957))
 
 
 🛠️ Tech Stack
