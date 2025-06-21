@@ -1,4 +1,4 @@
-🚀 QuickReply - Email Assistant ✉️🤖
+#🚀 QuickReply - Email Assistant ✉️🤖
 Ever felt overwhelmed by a flood of emails that needed a response ASAP?
 Introducing QuickReply - Email Assistant, a Chrome extension powered by Gemini AI that helps you generate professional, smart email replies in just one click.
 
