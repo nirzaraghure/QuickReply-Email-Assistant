@@ -13,7 +13,8 @@ Introducing QuickReply - Email Assistant, a Chrome extension powered by Gemini A
 ✅ Works directly within Gmail for seamless experience
 ✅ Designed for students, professionals, HRs, support teams, and more
 
-📸 Demo Preview (Optional)
+📸 Demo Preview :
+![Demo](./Screenshot (957).png)
 
 
 🛠️ Tech Stack
@@ -23,7 +24,8 @@ Extension APIs: Chrome Manifest V3
 
 AI Backend: Gemini 2.0 Flash via Google Generative AI API
 
-🚀 How to Use It
+🚀 How to Use It ->
+
 1️⃣ Get Your Gemini API Key
 Visit Google AI Studio
 
@@ -35,7 +37,7 @@ Copy your API key (it typically starts with AIza...).
 
 2️⃣ Clone or Download the Repository
 git clone https://github.com/[YourGitHubUsername]/QuickReply-Email-Assistant.git
-# Or, download the project as a ZIP file from GitHub
+ Or, download the project as a ZIP file from GitHub
 
 3️⃣ Load the Extension in Chrome
 Open Google Chrome.
