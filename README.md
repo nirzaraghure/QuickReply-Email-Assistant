@@ -37,7 +37,7 @@ Click “Create API Key” or use an existing one.
 Copy your API key (it typically starts with AIza...).
 
 2️⃣ Clone or Download the Repository
-git clone https://github.com/[YourGitHubUsername]/QuickReply-Email-Assistant.git
+git clone https://github.com/[nirzaraghure]/QuickReply-Email-Assistant.git
  Or, download the project as a ZIP file from GitHub
 
 3️⃣ Load the Extension in Chrome
